@@ -8,13 +8,12 @@ import matplotlib.pyplot as pl
 import math
 
 
-def Jacobi(A, b, x0, maxIter, w):
+def Jacobi(A, b, x0, maxIter, w, epsilon):
     D= np.diag(np.asarray(np.diagonal(A)))
     Dinv = LA.inv(D)
-    L = np.tril(A) #TODO check if need
-    U = np.triu(A)
     x_k = x0
     norms = []
+    bNorm = LA.norm(b)
     convergenceFactors = []
     for k in range(1,maxIter+1):
         x_k_new = x_k + w * Dinv@(b-(A@x_k))
@@ -22,6 +21,8 @@ def Jacobi(A, b, x0, maxIter, w):
         norms.append(currNorm)
         convergenceFactors.append(currNorm/ LA.norm((A @ x_k) - b, 2))
         x_k = x_k_new
+        if currNorm /bNorm < epsilon:
+            break
     return x_k, norms, convergenceFactors
 
 def GaussSeidel(A, b, x0, maxIter,w):
@@ -95,26 +96,26 @@ b = np.random.rand(n)
 A=np.asarray(A)
 print(A)
 
-x_Jacobi, norms_Jacobi , cf_Jacobi = Jacobi(A,b,x0,100,0.3)
-x_GS, norms_GS, cf_GS = GaussSeidel(A, b, x0, 100,1)
-x_SD, norms_SD, cf_SD = SteepestDescent(A, b, x0, 100,1)
-x_CG, norms_CG, cf_CG = ConjugateGradient(A, b, x0, 100,1)
-pl.semilogy(norms_Jacobi, label = 'Jacobi')
-pl.semilogy(norms_GS, label = 'Gauss Seidel')
-pl.semilogy(norms_SD, label = 'Steepest descend')
-pl.semilogy(norms_CG, label = 'Conjugate Gradient')
-pl.xlabel("k'th iteration")
-pl.ylabel(r'${||Ax^{(k)}-b||_2}$')
-pl.legend()
-pl.show()
-
-pl.semilogy(cf_Jacobi, label = 'Jacobi')
-pl.semilogy(cf_GS, label = 'Gauss Seidel')
-pl.semilogy(cf_SD, label = 'Steepest descend')
-pl.semilogy(cf_CG, label = 'Conjugate Gradient')
-pl.xlabel("k'th iteration")
-pl.ylabel(r'$\frac{||Ax^{(k)}-b||_2}{||Ax^{(k-1)}-b||_2}$')
-pl.show()
+# x_Jacobi, norms_Jacobi , cf_Jacobi = Jacobi(A,b,x0,100,0.3,0)
+# x_GS, norms_GS, cf_GS = GaussSeidel(A, b, x0, 100,1)
+# x_SD, norms_SD, cf_SD = SteepestDescent(A, b, x0, 100,1)
+# x_CG, norms_CG, cf_CG = ConjugateGradient(A, b, x0, 100,1)
+# pl.semilogy(norms_Jacobi, label = 'Jacobi')
+# pl.semilogy(norms_GS, label = 'Gauss Seidel')
+# pl.semilogy(norms_SD, label = 'Steepest descend')
+# pl.semilogy(norms_CG, label = 'Conjugate Gradient')
+# pl.xlabel("k'th iteration")
+# pl.ylabel(r'${||Ax^{(k)}-b||_2}$')
+# pl.legend()
+# pl.show()
+#
+# pl.semilogy(cf_Jacobi, label = 'Jacobi')
+# pl.semilogy(cf_GS, label = 'Gauss Seidel')
+# pl.semilogy(cf_SD, label = 'Steepest descend')
+# pl.semilogy(cf_CG, label = 'Conjugate Gradient')
+# pl.xlabel("k'th iteration")
+# pl.ylabel(r'$\frac{||Ax^{(k)}-b||_2}{||Ax^{(k-1)}-b||_2}$')
+# pl.show()
 
 
 # print("Jacobi\n", ans)
